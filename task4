@@ -1,0 +1,42 @@
+const express = require('express')
+const app = express()
+const port = 3000
+app.use(express.json())
+
+let astronauts =[ {id: 1 , Name: "Romeo" ,age: 26} , {id: 2 , Name: "alfredo" ,age: 28}];
+
+app.post("/astronauts" , (req , res) =>{
+  const newAstronauts = { id: astronauts.length +1 , ...req.body}
+  astronauts.push(newAstronauts);
+  res.status(201).json(newAstronauts);
+});
+
+app.get("/astronauts", (req, res) => {
+  res.json(astronauts)
+});
+
+app.get("/astronauts/;id", (req, res) => {
+  const astronaut = astronauts.find(a => a.id === Number(req.params.id));
+  if(!astronaut) return res.status(404).json({ message: "astronaut not found"});
+  res.json(astronauts);
+});
+
+app.put("/astronauts/;id", (req, res) => {
+  const astronaut = astronauts.find(a => a.id === Number(req.params.id));
+  if(!astronaut) return res.status(404).json({ message: "astronaut not found"});
+  astronaut.status = req.body.status || astronaut.status;
+  res.json(astronauts);
+});
+
+app.delete("/astronauts/;id", (req, res) => {
+  astronauts = astronauts.filter(a => a,id !== Number(req.params.id));
+  res.json({ message: "astronaut deleted successfully"});
+});
+ app.get('/' , (req , res) =>{
+  res.send('welcome to the homepage!');
+ }
+);
+
+app.listen(port, () => {
+  console.log("sever is running on port 3000");
+})
